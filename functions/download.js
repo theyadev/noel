@@ -1,6 +1,6 @@
 const Path = require("path");
-const fs = require('fs')
-const axios = require('axios')
+const fs = require("fs");
+const axios = require("axios");
 
 module.exports.download = async function download(url, name) {
   const path = Path.resolve(__dirname, "../themes", name);
@@ -17,7 +17,10 @@ module.exports.download = async function download(url, name) {
 
     return new Promise((resolve, reject) => {
       writer.on("finish", resolve);
-      writer.on("error", reject);
+      writer.on("error", function () {
+        reject;
+        download(url, name);
+      });
     });
   }
 };

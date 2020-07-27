@@ -119,7 +119,14 @@ module.exports.playRandomSong = async function playRandomSong(message, con, n) {
     });
     global.dispatcher.on("error", () => {
       console.error;
-      message.channel.send("Ya probleme :(");
+      if (message.guild.voice && message.guild.voice.channel)
+        message.guild.voice.channel.leave();
+      if (global.dispatcher) {
+        global.leave = 1;
+        global.dispatcher.emit("finish");
+        global.dispatcher = undefined;
+      }
+      message.channel.send("Error, check console.");
     });
   });
 };

@@ -35,6 +35,16 @@ module.exports.roulette = async function roulette(message, callback) {
   ids.forEach((id) => {
     sql += "Select anilist_username FROM amq WHERE discord_id = " + id + ";";
   });
+  function then(data) {
+    let animes = data;
+    if (global.type) {
+      animes = animes.filter((e) =>
+        e.themes.some((i) => i.themeType.includes(type))
+      );
+    }
+    let randomFromAnilist = animes[Math.floor(Math.random() * animes.length)];
+    callback(randomFromAnilist);
+  }
   connection = await mysql.createConnection(db_config);
   await connection.query(sql, function (err, res, fields) {
     if (err) throw err;
@@ -48,43 +58,19 @@ module.exports.roulette = async function roulette(message, callback) {
         let user =
           res[Math.floor(Math.random() * res.length)][0].anilist_username;
         getUserAnilist(user, function (data) {
-          let animes = data;
-          if (global.type) {
-            animes = animes.filter((e) =>
-              e.themes.some((i) => i.themeType.includes(type))
-            );
-          }
-          let randomFromAnilist =
-            animes[Math.floor(Math.random() * animes.length)];
-          callback(randomFromAnilist);
+          then(data);
         });
       } else {
         let user = res[Math.floor(Math.random() * res.length)].anilist_username;
         getUserAnilist(user, function (data) {
-          let animes = data;
-          if (global.type) {
-            animes = animes.filter((e) =>
-              e.themes.some((i) => i.themeType.includes(type))
-            );
-          }
-          let randomFromAnilist =
-            animes[Math.floor(Math.random() * animes.length)];
-          callback(randomFromAnilist);
+          then(data);
         });
       }
     } else {
       getUserAnilist("TheWindSpring", function (data) {
-        let animes = data;
-        if (global.type) {
-          animes = animes.filter((e) =>
-            e.themes.some((i) => i.themeType.includes(type))
-          );
-        }
-        let randomFromAnilist =
-          animes[Math.floor(Math.random() * animes.length)];
-        callback(randomFromAnilist);
+        then(data);
       });
     }
-    connection.end()
+    connection.end();
   });
 };
