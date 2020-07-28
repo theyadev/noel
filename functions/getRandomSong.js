@@ -74,7 +74,6 @@ module.exports.getRandomSong = async function getRandomSong(message, callback) {
       }
 
       function handleError(error) {
-        message.reply("Error, check console.");
         getRandomSong(message, function (name, data, info, anilist) {
           callback(name, data, info, anilist);
         });
