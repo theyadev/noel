@@ -22,7 +22,7 @@ module.exports.playRandomSong = async function playRandomSong(message, con, n) {
     }
 
     arrTitles = arrTitles.filter(
-      (e) => e.toLowerCase().replace(/[^a-zA-Z ]/g, "") != ""
+      (e) => e.toLowerCase().replace(/[^a-zA-Z_0-9 ]/g, "") != ""
     );
 
     console.log(arrTitles);
@@ -48,19 +48,19 @@ module.exports.playRandomSong = async function playRandomSong(message, con, n) {
               e
                 .toLowerCase()
                 .replace(" ", "")
-                .replace(/[^a-zA-Z ]/g, " ") ==
+                .replace(/[^a-zA-Z_0-9 ]/g, " ") ==
                 msg.content
                   .toLowerCase()
                   .replace(" ", "")
-                  .replace(/[^a-zA-Z ]/g, " ") ||
+                  .replace(/[^a-zA-Z_0-9 ]/g, " ") ||
               e
                 .toLowerCase()
                 .replace(" ", "")
-                .replace(/[^a-zA-Z ]/g, "") ==
+                .replace(/[^a-zA-Z_0-9 ]/g, "") ==
                 msg.content
                   .toLowerCase()
                   .replace(" ", "")
-                  .replace(/[^a-zA-Z ]/g, "")
+                  .replace(/[^a-zA-Z_0-9 ]/g, "")
           )
         ) {
           found(msg);
@@ -101,7 +101,6 @@ module.exports.playRandomSong = async function playRandomSong(message, con, n) {
       }
       if (arrTitles) {
         let aliases = [...new Set(arrTitles)];
-        console.log(aliases);
         embed.addFields({ name: "Names", value: aliases.join("\n") });
       }
       message.channel.send(`The answer was:`, embed);
