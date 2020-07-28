@@ -47,19 +47,19 @@ module.exports.playRandomSong = async function playRandomSong(message, con, n) {
             (e) =>
               e
                 .toLowerCase()
-                .replace(" ", "")
+                .replace(/ /g, "")
                 .replace(/[^a-zA-Z_0-9 ]/g, " ") ==
                 msg.content
                   .toLowerCase()
-                  .replace(" ", "")
+                  .replace(/ /g, "")
                   .replace(/[^a-zA-Z_0-9 ]/g, " ") ||
               e
                 .toLowerCase()
-                .replace(" ", "")
+                .replace(/ /g, "")
                 .replace(/[^a-zA-Z_0-9 ]/g, "") ==
                 msg.content
                   .toLowerCase()
-                  .replace(" ", "")
+                  .replace(/ /g, "")
                   .replace(/[^a-zA-Z_0-9 ]/g, "")
           )
         ) {
