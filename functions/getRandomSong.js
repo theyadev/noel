@@ -16,7 +16,7 @@ module.exports.getRandomSong = async function getRandomSong(message, callback) {
     download(data.themes[w].mirror.mirrorURL, name).then(() => {
       var query = `
         query ($title: String) {
-          Media(search: $title) {
+          Media(search: $title, type: ANIME) {
             title {
               romaji
               english
