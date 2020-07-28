@@ -92,10 +92,10 @@ module.exports.playRandomSong = async function playRandomSong(message, con, n) {
             inline: true,
           }
         );
-      if (genres) {
+      if (genres.length > 0) {
         embed.addFields({ name: "Genres", value: genres[0], inline: true });
       }
-      if (tags) {
+      if (tags.length > 0) {
         embed.addFields({ name: "Tags", value: tags[0], inline: true });
       }
       if (arrTitles) {
