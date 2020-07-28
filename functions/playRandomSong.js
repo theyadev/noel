@@ -10,9 +10,6 @@ module.exports.playRandomSong = async function playRandomSong(message, con, n) {
     });
 
     let arrTitles = anilist.synonyms;
-    arrTitles = arrTitles.filter(
-      (e) => e.toLowerCase().replace(/[^a-zA-Z ]/g, "") != ""
-    );
 
     if (anilist.title.romaji != null) {
       arrTitles.push(anilist.title.romaji);
@@ -23,6 +20,10 @@ module.exports.playRandomSong = async function playRandomSong(message, con, n) {
     if (data.name) {
       arrTitles.push(data.name);
     }
+
+    arrTitles = arrTitles.filter(
+      (e) => e.toLowerCase().replace(/[^a-zA-Z ]/g, "") != ""
+    );
 
     console.log(arrTitles);
 
@@ -92,14 +93,15 @@ module.exports.playRandomSong = async function playRandomSong(message, con, n) {
             inline: true,
           }
         );
-      if (genres.length > 0) {
+      if (genres && genres[0].length > 0) {
         embed.addFields({ name: "Genres", value: genres[0], inline: true });
       }
-      if (tags.length > 0) {
+      if (tags && tags[0].length > 0) {
         embed.addFields({ name: "Tags", value: tags[0], inline: true });
       }
       if (arrTitles) {
         let aliases = [...new Set(arrTitles)];
+        console.log(aliases);
         embed.addFields({ name: "Names", value: aliases.join("\n") });
       }
       message.channel.send(`The answer was:`, embed);
