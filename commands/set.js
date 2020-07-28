@@ -1,12 +1,6 @@
 var mysql = require("mysql");
 const fetch = require("node-fetch");
-const db_config = {
-  host: "localhost",
-  user: "theya",
-  password: "Mot2Passe!",
-  database: "osubot",
-  multipleStatements: true,
-};
+const { db_config } = require("../config.json");
 var connection;
 
 module.exports = {
@@ -64,7 +58,7 @@ module.exports = {
                 message.reply(
                   "your Anilist username is now set to: " + data.data.User.name
                 );
-                connection.end()
+                connection.end();
               }
             );
           } else {
@@ -75,8 +69,8 @@ module.exports = {
                   "your anilist username is now changed to: " +
                     data.data.User.name
                 );
-                connection.end()
-              }             
+                connection.end();
+              }
             );
           }
         }
