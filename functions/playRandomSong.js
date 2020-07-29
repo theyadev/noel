@@ -5,12 +5,11 @@ const getPoints = require("./points").points;
 
 module.exports.playRandomSong = async function playRandomSong(message, con, n) {
   getRandomSong(message, function (name, data, info, anilist) {
-    global.dispatcher[message.guild.id] = con.play(
-      fs.createReadStream("./themes/" + name),
-      {
-        type: "webm/opus",
-      }
-    );
+    let currentTheme = fs.createReadStream("./themes/" + name);
+
+    global.dispatcher[message.guild.id] = con.play(currentTheme, {
+      type: "webm/opus",
+    });
 
     let arrTitles = anilist.synonyms;
 
@@ -122,12 +121,15 @@ module.exports.playRandomSong = async function playRandomSong(message, con, n) {
         message.channel.send("The quiz is finished.");
         getPoints(message);
         global.points[message.guild.id].clear();
-        global.dispatcher[message.guild.id] = undefined;
         global.nos[message.guild.id] = 0;
         message.guild.voice.channel.leave();
         global.leave[message.guild.id] = 0;
         global.type[message.guild.id] = undefined;
+        global.dispatcher[message.guild.id].destroy();
+        global.dispatcher[message.guild.id] = undefined;
       }
+      currentTheme.destroy();
+      fs.unlinkSync("./themes/" + name);
     });
     global.dispatcher[message.guild.id].on("error", () => {
       console.error;
