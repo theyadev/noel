@@ -129,7 +129,9 @@ module.exports.playRandomSong = async function playRandomSong(message, con, n) {
         global.dispatcher[message.guild.id] = undefined;
       }
       currentTheme.destroy();
-      fs.unlinkSync("./themes/" + name);
+      if (fs.existsSync("./themes/" + name)) {
+        fs.unlinkSync("./themes/" + name);
+      }
     });
     global.dispatcher[message.guild.id].on("error", () => {
       console.error;
