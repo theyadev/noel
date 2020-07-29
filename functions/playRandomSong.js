@@ -5,9 +5,12 @@ const getPoints = require("./points").points;
 
 module.exports.playRandomSong = async function playRandomSong(message, con, n) {
   getRandomSong(message, function (name, data, info, anilist) {
-    global.dispatcher = con.play(fs.createReadStream("./themes/" + name), {
-      type: "webm/opus",
-    });
+    global.dispatcher[message.guild.id] = con.play(
+      fs.createReadStream("./themes/" + name),
+      {
+        type: "webm/opus",
+      }
+    );
 
     let arrTitles = anilist.synonyms;
 
@@ -28,13 +31,16 @@ module.exports.playRandomSong = async function playRandomSong(message, con, n) {
     console.log(arrTitles);
 
     function found(msg) {
-      if (global.points.has(msg.author.id)) {
-        global.points.set(msg.author.id, global.points.get(msg.author.id) + 1);
+      if (global.points && global.points[message.guild.id].has(msg.author.id)) {
+        global.points[message.guild.id].set(
+          msg.author.id,
+          global.points[message.guild.id].get(msg.author.id) + 1
+        );
       } else {
-        global.points.set(msg.author.id, 1);
+        global.points[message.guild.id].set(msg.author.id, 1);
       }
       message.channel.send(`**${msg.author.username}** found the anime.`);
-      global.dispatcher.emit("finish");
+      global.dispatcher[message.guild.id].emit("finish");
     }
 
     function listener(msg) {
@@ -67,12 +73,12 @@ module.exports.playRandomSong = async function playRandomSong(message, con, n) {
         }
       }
     }
-    global.dispatcher.on("start", () => {
+    global.dispatcher[message.guild.id].on("start", () => {
       message.client.on("message", listener);
     });
 
-    global.dispatcher.on("finish", () => {
-      global.nos++;
+    global.dispatcher[message.guild.id].on("finish", () => {
+      global.nos[message.guild.id]++;
       let genres = [];
       genres.push(anilist.genres.map((e) => e).join(", "));
       let tags = [];
@@ -105,27 +111,32 @@ module.exports.playRandomSong = async function playRandomSong(message, con, n) {
       }
       message.channel.send(`The answer was:`, embed);
       message.client.removeListener("message", listener);
-      if (global.leave != 1 && global.nos < n) {
+      if (
+        global.leave &&
+        global.leave[message.guild.id] != 1 &&
+        global.nos &&
+        global.nos[message.guild.id] < n
+      ) {
         playRandomSong(message, con, n);
       } else {
         message.channel.send("The quiz is finished.");
         getPoints(message);
-        global.points.clear();
-        global.dispatcher = undefined;
-        global.nos = 0;
+        global.points[message.guild.id].clear();
+        global.dispatcher[message.guild.id] = undefined;
+        global.nos[message.guild.id] = 0;
         message.guild.voice.channel.leave();
-        global.leave = 0;
-        global.type = undefined;
+        global.leave[message.guild.id] = 0;
+        global.type[message.guild.id] = undefined;
       }
     });
-    global.dispatcher.on("error", () => {
+    global.dispatcher[message.guild.id].on("error", () => {
       console.error;
       if (message.guild.voice && message.guild.voice.channel)
         message.guild.voice.channel.leave();
-      if (global.dispatcher) {
-        global.leave = 1;
-        global.dispatcher.emit("finish");
-        global.dispatcher = undefined;
+      if (global.dispatcher && global.dispatcher[message.guild.id]) {
+        global.leave[message.guild.id] = 1;
+        global.dispatcher[message.guild.id].emit("finish");
+        global.dispatcher[message.guild.id] = undefined;
       }
       message.channel.send("Error, check console.");
     });

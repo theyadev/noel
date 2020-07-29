@@ -3,8 +3,13 @@ const { prefix, token, tokenTest } = require("./config.json");
 const fs = require("fs");
 const Path = require("path");
 const empty = require("empty-folder");
+const { globalAgent } = require("http");
 
-global.points = new Map();
+global.points = [];
+global.dispatcher = [];
+global.nos = [];
+global.type = [];
+global.leave = [];
 
 const client = new Discord.Client();
 global.client = client;
@@ -77,11 +82,7 @@ process.stdin.resume();
 process.on("SIGINT", function () {
   const path = Path.resolve(__dirname, "themes");
   empty(path, false, (o) => {
-    if (o.error) throw o.error
-    if (global.dispatcher) {
-      global.dispatcher.emit('finish')
-    }
+    if (o.error) throw o.error;
     process.exit();
   });
-  
 });

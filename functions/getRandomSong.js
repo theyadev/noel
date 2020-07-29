@@ -4,9 +4,9 @@ const roulette = require("./roulette.js").roulette;
 
 module.exports.getRandomSong = async function getRandomSong(message, callback) {
   roulette(message, function (data) {
-    if (global.type) {
+    if (global.type && global.type[message.guild.id]) {
       data.themes = data.themes.filter((e) =>
-        e.themeType.includes(global.type)
+        e.themeType.includes(global.type[message.guild.id])
       );
     }
     let w = Math.floor(Math.random() * data.themes.length);

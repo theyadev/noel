@@ -1,8 +1,8 @@
 module.exports = {
   name: "next",
-  execute(message, args) {
-    if (global.dispatcher) {
-      global.dispatcher.emit("finish");
+  execute(message) {
+    if (global.dispatcher && global.dispatcher[message.guild.id]) {
+      global.dispatcher[message.guild.id].emit("finish");
     }
   },
 };

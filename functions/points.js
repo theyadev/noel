@@ -2,12 +2,12 @@ const Discord = require("discord.js");
 
 module.exports.points = function points(message) {
   const mapSort1 = new Map(
-    [...global.points.entries()].sort((a, b) => b[1] - a[1])
+    [...global.points[message.guild.id].entries()].sort((a, b) => b[1] - a[1])
   );
   let i = 0;
   let embed = new Discord.MessageEmbed()
     .setTitle("__**Leaderboard**__")
-    .setDescription(`(${global.nos} Songs Played)`);
+    .setDescription(`(${global.nos[message.guild.id]} Songs Played)`);
   mapSort1.forEach((value, key) => {
     i++;
     if (i == 1) {
@@ -21,7 +21,7 @@ module.exports.points = function points(message) {
       }
     }
     let val = `${value} Points.`;
-    if (value == global.nos) {
+    if (value == global.nos[message.guild.id]) {
       val = val.concat(" 🔥");
     }
     embed.addFields({
