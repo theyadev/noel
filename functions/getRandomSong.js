@@ -74,6 +74,7 @@ module.exports.getRandomSong = async function getRandomSong(message, callback) {
       }
 
       function handleError(error) {
+        message.channel.send('An error as occured, loading a new song...')
         getRandomSong(message, function (name, data, info, anilist) {
           callback(name, data, info, anilist);
         });
