@@ -120,6 +120,8 @@ module.exports.playRandomSong = async function playRandomSong(message, con, n) {
       } else {
         message.channel.send("The quiz is finished.");
         getPoints(message);
+        global.next[message.guild.id] = true
+        global.onQuiz[message.guild.id] = false
         global.points[message.guild.id].clear();
         global.nos[message.guild.id] = 0;
         message.guild.voice.channel.leave();

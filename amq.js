@@ -10,6 +10,12 @@ global.dispatcher = [];
 global.nos = [];
 global.type = [];
 global.leave = [];
+global.onQuiz = []
+global.next = []
+global.nextStatus = []
+global.nextUsers = []
+global.leaveStatus = []
+global.leaveUsers = []
 
 const client = new Discord.Client();
 global.client = client;

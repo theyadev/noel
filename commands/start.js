@@ -11,6 +11,9 @@ module.exports = {
         message.guild.voice.channel
       )
         return message.reply("quiz already started.");
+      if (global.onQuiz[message.guild.id] == true)
+        return message.reply("please don't try to break the bot.");
+      global.onQuiz[message.guild.id] = true;
       message.member.voice.channel.join().then((con) => {
         global.points[message.guild.id] = new Map();
         global.nos[message.guild.id] = 0;
@@ -22,15 +25,37 @@ module.exports = {
                 global.type[message.guild.id] = "ED";
               } else if (e.toUpperCase() == "OP") {
                 global.type[message.guild.id] = "OP";
+              } else if (
+                e.toLowerCase() == "-nonext" ||
+                e.toLowerCase() == "-nn"
+              ) {
+                global.next[message.guild.id] = false;
+              } else if (
+                e.toLowerCase() == "-unlimitednext" ||
+                e.toLowerCase() == "-un"
+              ) {
+                global.next[message.guild.id] = "unlimited";
               }
             } else if (e > 0) {
               n = e;
             }
           });
-          playRandomSong(message, con, n);
-        } else {
-          playRandomSong(message, con, 10);
         }
+        if (!global.next[message.guild.id])
+          global.next[message.guild.id] = true;
+
+        if (global.next[message.guild.id] == true) {
+          if (!global.nextUsers[message.guild.id])
+            global.nextUsers[message.guild.id] = new Set();
+
+          global.nextStatus[message.guild.id] = 0;
+        }
+
+        if (!global.leaveUsers[message.guild.id])
+          global.leaveUsers[message.guild.id] = new Set();
+
+          global.leaveStatus[message.guild.id] = 0;
+        playRandomSong(message, con, 10);
 
         let type = global.type[message.guild.id];
         if (type == undefined) type = "OP/ED";
