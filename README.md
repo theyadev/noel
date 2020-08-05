@@ -6,7 +6,7 @@
 
 > Here's the command list:
 > - 'help
-> - 'start (Number of songs) (OP/ED): Start a new quiz. 
+> - 'start (Number of songs) (OP/ED) (-nonext / -unlimitednext): Start a new quiz. 
 > - 'next: Skip a song.
 > - 'leave: Stop the quiz.
 > - 'points: Show leaderboard for the current quiz.
